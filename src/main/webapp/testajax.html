@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>跨域测试</title>
+    <script src="jquery/jquery-2.1.1.min.js"></script>
+</head>
+<body>
+
+<script>
+
+    $.ajax(
+        {
+            url: "http://localhost:8080/getDataJsonp",
+            type: "GET",
+            jsonp: "callback",
+            dataType: "jsonp", //指定服务器返回的数据类型
+            success: function (data) {
+                console.log(typeof (data))
+                console.log(data.name)
+                console.log(data.age)
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+                console.log("服务器异常");
+                alert(XMLHttpRequest.status);//200 400  404  415  500
+                alert(XMLHttpRequest.readyState);//0-4
+                alert(XMLHttpRequest.responseText);//响应文本
+                alert(textStatus);
+                alert(errorThrown);
+                console.log(textStatus);
+            }
+        });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品列表</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!--<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <!--<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>-->
+    <!--<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+    <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+    <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <form >
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            商品名称：<input type="text" id="goodsname">
+        </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            价格区间：<input style="width: 100px" type="text" id="minprice">-<input style="width: 100px" type="text" id="maxprice">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            是否上架： <select  id="status">
+                <option value="TOP">TOP</option>
+                <option value="DOWN">DOWN</option>
+                <option value="DBL">DBL</option>
+            </select>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <button type="button" onclick="selectGoods()">查询</button>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <a href="addGoods.html">新增</a>
+            </div>
+        </form>
+
+    </div>
+    <div class="row">
+
+        <div class="col-lg-12 col-md-8 col-sm-8 col-xs-8">
+            <table class="table table-striped table-bordered" >
+                <thead>
+                <tr>
+                    <th>商品ID</th>
+                    <th>商品标题</th>
+                    <th>商品名称</th>
+                    <th>基础价格</th>
+                    <th>价格</th>
+                    <th>成本价格</th>
+                    <th>库存量</th>
+                    <th>商品描述</th>
+                    <th>GoodsHot</th>
+                    <th>status</th>
+                    <th>goodsType</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="thetbody">
+
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+<script src="jquery/jquery-2.1.1.min.js"></script>
+<!-- 包括所有已编译的插件 -->
+<script src="js/bootstrap.min.js"></script>
+<script>
+    function selectAllGoods() {
+        $.ajax({
+            url:"selectAllGoods",
+            type:"post",
+            dataType:"json",
+            success:function(data){
+                //先获取tbody节点
+                var $thetbody = $("#thetbody");
+                //清空原来tbody下的所有子节点
+                $thetbody.empty();
+                //再重新循环遍历data,在tbody下添加查到的内容
+                $(data).each(function(i,n){
+                    $thetbody.append(
+                    "<tr>"+
+                    "<td>"+n.id+"</td>"+
+                    "<td>"+n.goodsTitle+"</td>"+
+                    "<td>"+n.goodsName+"</td>"+
+                    "<td>"+n.basePrice+"</td>"+
+                    "<td>"+n.price+"</td>"+
+                    "<td>"+n.costPrice+"</td>"+
+                    "<td>"+n.stockNum+"</td>"+
+                    "<td>"+n.goodsDesc+"</td>"+
+                    "<td>"+n.goodsHot+"</td>"+
+                    "<td>"+n.status+"</td>"+
+                    "<td>"+n.goodsType+"</td>"+
+                    "<td><a href='deleteByID?id="+n.id+"'>删除</a></td>"+
+                    "<td><a href='editGoods.html?id="+n.id+"'>修改</a></td>"+
+                    "</tr>"
+                    )
+
+                })
+
+            },
+            error:function (data) {
+                alert(data);
+
+            }
+        })
+
+    }
+    selectAllGoods();
+    function selectGoods() {
+        //先获取tbody节点
+        var $thetbody = $("#thetbody");
+        //清空原来tbody下的所有子节点
+        $thetbody.empty();
+        //获取值
+        var $goodsname = $("#goodsname").val();
+        var $minprice = $("#minprice").val();
+        var $maxprice = $("#maxprice").val();
+        var $status = $("#status option:selected").val();
+        $.ajax({
+            url:"selectGoods",
+            type:"post",
+            data:JSON.stringify({
+                "goodsName":$goodsname,
+                "minprice":$minprice,
+                "maxprice":$maxprice,
+                "status":$status
+            }),
+            contentType:"application/json;charset=utf-8",
+            dataType:"json",
+            success:function(data){
+                //再重新循环遍历data,在tbody下添加查到的内容
+                $(data).each(function(i,n){
+                    $thetbody.append(
+                        "<tr>"+
+                        "<td>"+n.id+"</td>"+
+                        "<td>"+n.goodsTitle+"</td>"+
+                        "<td>"+n.goodsName+"</td>"+
+                        "<td>"+n.basePrice+"</td>"+
+                        "<td>"+n.price+"</td>"+
+                        "<td>"+n.costPrice+"</td>"+
+                        "<td>"+n.stockNum+"</td>"+
+                        "<td>"+n.goodsDesc+"</td>"+
+                        "<td>"+n.goodsHot+"</td>"+
+                        "<td>"+n.status+"</td>"+
+                        "<td>"+n.goodsType+"</td>"+
+                        "<td><a href='deleteByID?id="+n.id+"'>删除</a></td>"+
+                        "</tr>"
+                    )
+
+                })
+
+
+            },
+            error:function (data) {
+                alert(data);
+            }
+        })
+
+
+    }
+</script>
+
+</body>
+</html>

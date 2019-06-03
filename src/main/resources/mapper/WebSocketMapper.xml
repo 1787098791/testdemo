@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freedom.mapper.WebSocketMapper">
+<insert id="insertInfo" parameterType="com.freedom.pojo.Message">
+    insert into message (messageId,fromId,fromName,toId,messageText,messageDate)
+    values
+    (null,#{fromId},#{fromName},#{toId},#{messageText},#{messageDate})
+</insert>
+
+</mapper>
