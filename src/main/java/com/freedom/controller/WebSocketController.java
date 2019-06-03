@@ -19,7 +19,7 @@ public class WebSocketController {
     public Object getSocketPath(HttpServletRequest request){
         String path = request.getContextPath();//获取项目名
         String socketPath = request.getServerName()+":"+request.getServerPort()+path+"/";
-        //System.out.println(path.length());
+        System.out.println(path.length());
         return socketPath;
     }
 
